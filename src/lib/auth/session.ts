@@ -21,12 +21,12 @@ export function useAuth() {
 }
 
 export function useHasRole(role: UserRole) {
-  const { session } = useSession()
+  const { data: session } = useSession()
   return session?.user?.role === role
 }
 
 export function useCanAccessArtistDashboard() {
-  const { session } = useSession()
+  const { data: session } = useSession()
   return (
     session?.user?.role === UserRole.ARTIST &&
     session?.user?.isArtistApproved
