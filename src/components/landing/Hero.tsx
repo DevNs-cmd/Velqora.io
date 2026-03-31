@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Play, Star, Music, Award } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import Image from 'next/image'
 import dynamic from 'next/dynamic'
 
 const Brand3D = dynamic(() => import('@/components/ui/Brand3D'), { 
@@ -14,142 +15,126 @@ const Brand3D = dynamic(() => import('@/components/ui/Brand3D'), {
 
 export function Hero() {
   return (
-    <section className="relative min-h-[100dvh] flex items-center justify-center pt-24 overflow-hidden">
-      {/* Background with Ambient Glow */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Video */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-gold/10 blur-[150px] rounded-full opacity-30" />
-        <div className="absolute top-[30%] -right-[15%] w-[50%] h-[50%] bg-gold/5 blur-[120px] rounded-full opacity-20" />
-        <div className="absolute -bottom-[10%] left-[20%] w-[40%] h-[40%] bg-gold/15 blur-[100px] rounded-full opacity-25" />
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          className="w-full h-full object-cover scale-105"
+        >
+          <source src="/hero-1.mp4" type="video/mp4" />
+        </video>
         
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light" />
+        {/* Cinematic Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-charcoal/80 via-charcoal/40 to-charcoal/90" />
+        <div className="absolute inset-0 bg-gold/5 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light" />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center pt-20">
         {/* TEXT CONTENT */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex flex-col space-y-8 max-w-2xl"
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="flex flex-col space-y-10"
         >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex items-center space-x-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full w-fit"
-          >
-            <Star size={14} className="text-gold fill-gold" />
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[.2em] text-gold-light">
-              World-Class Live Entertainment
-            </span>
-          </motion.div>
+          {/* Glassmorphic Brand Box */}
+          <div className="p-8 md:p-12 bg-black/30 backdrop-blur-2xl border border-gold/10 rounded-[3rem] space-y-8 shadow-2xl relative group">
+             <div className="absolute -top-6 -left-6 w-24 h-24 bg-gold/5 blur-3xl group-hover:bg-gold/20 transition-all" />
+             
+             <div className="space-y-6">
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
+                  className="w-24 h-24 md:w-32 md:h-32 relative mb-6 rounded-full border border-gold/30 overflow-hidden bg-black shadow-[0_0_30px_rgba(212,175,55,0.15)] group-hover:scale-105 transition-transform duration-700"
+                >
+                   <Image 
+                    src="/logo.jpg" 
+                    alt="Velqora Premium Logo" 
+                    fill
+                    className="object-contain p-2"
+                   />
+                </motion.div>
+                
+                <div className="space-y-6">
+                  <h1 className="text-5xl md:text-7xl font-serif font-bold leading-[1.1] text-white tracking-tight">
+                    Velqora <span className="text-gold italic block mt-1">Private.</span>
+                  </h1>
+                  <p className="text-sm md:text-base text-white/40 leading-relaxed max-w-sm font-light tracking-[.25em] uppercase italic border-l border-gold/20 pl-6">
+                    The standard of excellence. Elite talent for exclusive curated events.
+                  </p>
+                </div>
+             </div>
 
-          {/* Heading */}
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold leading-[1.1] text-white">
-              The <span className="text-gold text-glow-gold italic">Art</span> of Performance.
-            </h1>
-            <p className="text-lg md:text-xl text-white/60 leading-relaxed max-w-lg font-light">
-              Experience the exclusivity. Book elite singers, high-profile bands, and internationally acclaimed DJs for your most prestigious events.
-            </p>
-          </div>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-6 items-center">
-            <Link href="/auth/signin">
-              <Button className="h-14 px-10 text-lg bg-gradient-gold text-charcoal font-bold group">
-                Book a Performer
-                <ArrowRight size={20} className="ml-2 group-hover:translate-x-2 transition-transform" />
-              </Button>
-            </Link>
-            
-            <button className="flex items-center space-x-4 text-white hover:text-gold transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-full border border-gold/50 flex items-center justify-center group-hover:bg-gold/10 group-hover:scale-110 transition-all">
-                <Play size={20} className="fill-gold text-gold" />
-              </div>
-              <span className="font-semibold tracking-wide uppercase text-sm">Experience the Film</span>
-            </button>
-          </div>
-
-          {/* TRUST BADGE */}
-          <div className="pt-8 flex flex-wrap gap-8 items-center border-t border-white/10 opacity-60">
-            <div className="flex items-center space-x-2">
-              <Award size={18} className="text-gold" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Premium Certified</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Star size={18} className="text-gold" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">4.9/5 Avg. Rating</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Music size={18} className="text-gold" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">500+ Curated Artists</span>
-            </div>
+             <div className="flex flex-col sm:flex-row gap-6 pt-4">
+               <Link href="/auth/signin">
+                 <Button className="h-16 px-12 text-sm uppercase tracking-[0.2em] bg-white text-charcoal hover:bg-gold transition-all font-bold shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                   Book Talent
+                 </Button>
+               </Link>
+               
+               <button className="flex items-center space-x-4 text-white/60 hover:text-gold transition-all group">
+                 <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold transition-all">
+                   <Play size={16} className="fill-gold text-gold" />
+                 </div>
+                 <span className="text-[10px] font-bold uppercase tracking-widest">Experience Film</span>
+               </button>
+             </div>
           </div>
         </motion.div>
 
-        {/* 3D LOGO / MASHUP */}
+        {/* SECOND VIDEO / AMBIENT ELEMENT */}
         <motion.div
-           initial={{ opacity: 0, scale: 0.8, rotateY: 30 }}
-           animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-           transition={{ duration: 1.2, ease: "easeOut" }}
-           className="hidden lg:block relative"
+           initial={{ opacity: 0, scale: 0.9 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           viewport={{ once: true }}
+           transition={{ duration: 1.2 }}
+           className="hidden lg:block"
         >
-          {/* Animated 3D elements could go here */}
-          <div className="relative z-10">
-            <Brand3D />
-          </div>
-          
-          {/* Floating Luxury Elements (Mock) */}
-          <motion.div
-            animate={{ 
-              y: [0, -20, 0],
-              rotate: [0, 5, 0]
-            }}
-            transition={{ 
-              duration: 6, 
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute -top-10 -right-10 w-32 h-32 bg-gold/5 backdrop-blur-xl border border-gold/20 rounded-2xl flex items-center justify-center p-4 shadow-2xl"
-          >
-             <Music className="text-gold w-12 h-12 opacity-50" />
-          </motion.div>
-          
-          <motion.div
-            animate={{ 
-              y: [0, 20, 0],
-              rotate: [0, -5, 0]
-            }}
-            transition={{ 
-              duration: 5, 
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1
-            }}
-            className="absolute -bottom-10 left-0 w-40 h-16 bg-charcoal-light/50 backdrop-blur-md border border-gold/10 rounded-full flex items-center justify-center px-6 shadow-2xl space-x-3"
-          >
-             <div className="flex -space-x-2">
-                {[1,2,3].map(i => (
-                  <div key={i} className="w-6 h-6 rounded-full bg-gold border border-charcoal" />
-                ))}
+          <div className="relative group">
+             <div className="absolute inset-0 bg-gold/10 blur-[100px] rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
+             <div className="relative z-10 w-full aspect-[4/5] rounded-[4rem] overflow-hidden border border-gold/10 shadow-2xl">
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
+                >
+                  <source src="/hero-2.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent opacity-60" />
+                
+                <div className="absolute bottom-10 left-10 right-10">
+                   <div className="p-6 bg-black/40 backdrop-blur-xl border border-gold/10 rounded-3xl flex items-center justify-between">
+                      <div>
+                         <div className="text-[10px] font-bold uppercase tracking-[.3em] text-gold mb-1">Live Vibe</div>
+                         <div className="text-xl font-serif font-bold text-white">Elite Performers.</div>
+                      </div>
+                      <div className="w-12 h-12 rounded-full bg-gold flex items-center justify-center text-charcoal">
+                         <Star size={20} />
+                      </div>
+                   </div>
+                </div>
              </div>
-             <span className="text-[10px] text-white/70 font-semibold tracking-tighter">Elite Roster</span>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
-      
-      {/* Scroll Indicator */}
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-2 opacity-30"
-      >
-        <span className="text-[10px] text-gold font-bold uppercase tracking-[.3em]">Discover</span>
-        <div className="w-px h-12 bg-gradient-to-b from-gold to-transparent" />
-      </motion.div>
+
+      {/* FOOTER INDICATOR */}
+      <div className="absolute bottom-10 left-10 flex items-center space-x-6 z-10">
+         <div className="flex items-center space-x-3 text-[10px] font-bold uppercase tracking-widest text-white/30">
+            <span className="w-8 h-px bg-white/20" />
+            <span>Standard of Excellence</span>
+         </div>
+      </div>
     </section>
   )
 }

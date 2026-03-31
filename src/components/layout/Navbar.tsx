@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
 export function Navbar() {
   const { data: session } = useSession()
@@ -54,10 +55,13 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* LOGO */}
-        <Link href="/" className="flex items-center space-x-2 group">
-          <span className="text-2xl font-serif font-bold tracking-widest text-gold group-hover:text-gold-light transition-colors">
-            VELQORA
-          </span>
+        <Link href="/" className="flex items-center space-x-2 group h-12 w-12 rounded-full border border-gold/30 overflow-hidden relative bg-black shadow-lg">
+          <Image 
+            src="/logo.jpg" 
+            alt="Velqora Logo" 
+            fill 
+            className="object-contain p-1 group-hover:scale-110 transition-transform"
+          />
         </Link>
 
         {/* DESKTOP NAV */}

@@ -1,31 +1,61 @@
 import { NextAuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import { PrismaAdapter } from '@auth/prisma-adapter'
+import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import { UserRole } from '@prisma/client'
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as unknown as NextAuthOptions['adapter'],
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code"
-        }
+    CredentialsProvider({
+      name: 'Demo Access',
+      credentials: {
+        email: { label: "Email", type: "email", placeholder: "demo@velqora.com" },
+        name: { label: "Name", type: "text", placeholder: "Demo User" },
+        role: { label: "Role", type: "text" }
       },
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          role: UserRole.CLIENT, // Default role
+      async authorize(credentials) {
+        if (!credentials?.email) return null
+
+        try {
+          // 1. Try real database logic
+          let user = await prisma.user.findUnique({
+            where: { email: credentials.email }
+          })
+
+          if (!user) {
+            user = await prisma.user.create({
+              data: {
+                email: credentials.email,
+                name: credentials.name || 'Demo User',
+                role: (credentials.role as UserRole) || UserRole.CLIENT,
+                image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=250&h=250&auto=format&fit=crop',
+              }
+            })
+          } else if (credentials.role && user.role !== (credentials.role as UserRole)) {
+            user = await prisma.user.update({
+              where: { id: user.id },
+              data: { role: credentials.role as UserRole }
+            })
+          }
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            role: user.role,
+          }
+        } catch (error) {
+          console.warn('⚠️ Database not reachable (Prisma). Falling back to MOCK AUTH for testing.')
+          // 2. Fallback to MOCK user for smooth demo
+          return {
+            id: 'mock-user-id',
+            name: credentials.name || 'Demo User',
+            email: credentials.email,
+            image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=250&h=250&auto=format&fit=crop',
+            role: (credentials.role as UserRole) || UserRole.CLIENT,
+          }
         }
-      },
+      }
     }),
   ],
   pages: {
@@ -72,19 +102,23 @@ export const authOptions: NextAuthOptions = {
         token.image = session.image || token.image
       }
 
-      // Fetch latest user data on every JWT refresh
-      if (token.id) {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          include: { artistProfile: true },
-        })
+      // Fetch latest user data on every JWT refresh (RESILIENT)
+      if (token.id && token.id !== 'mock-user-id') {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            include: { artistProfile: true },
+          })
 
-        if (dbUser) {
-          token.role = dbUser.role
-          token.name = dbUser.name
-          token.image = dbUser.image
-          token.hasArtistProfile = !!dbUser.artistProfile
-          token.isArtistApproved = dbUser.artistProfile?.isApproved || false
+          if (dbUser) {
+            token.role = dbUser.role
+            token.name = dbUser.name
+            token.image = dbUser.image
+            token.hasArtistProfile = !!dbUser.artistProfile
+            token.isArtistApproved = dbUser.artistProfile?.isApproved || false
+          }
+        } catch (error) {
+          console.warn('⚠️ Token Refresh: Database inaccessible. Using token cache.')
         }
       }
 

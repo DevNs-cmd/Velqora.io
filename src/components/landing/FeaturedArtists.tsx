@@ -56,18 +56,18 @@ export function FeaturedArtists() {
   ]
 
   return (
-    <section id="artists" className="py-32 relative bg-charcoal-dark border-y border-gold/10" ref={containerRef}>
+    <section id="artists" className="py-20 relative bg-charcoal-dark border-y border-gold/10" ref={containerRef}>
       {/* Background decoration */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-gold/5 blur-[120px] opacity-20 pointer-events-none" />
       <div className="absolute right-0 top-1/4 w-80 h-80 bg-gold/5 blur-[100px] opacity-10 pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
-          <div className="max-w-2xl space-y-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+          <div className="max-w-2xl space-y-3">
              <motion.span 
                initial={{ opacity: 0, x: -20 }}
                animate={isInView ? { opacity: 1, x: 0 } : {}}
-               className="text-gold font-bold uppercase tracking-[.4em] text-xs"
+               className="text-gold font-bold uppercase tracking-[.4em] text-[10px]"
              >
                The Roster
              </motion.span>
@@ -75,7 +75,7 @@ export function FeaturedArtists() {
                initial={{ opacity: 0, y: 20 }}
                animate={isInView ? { opacity: 1, y: 0 } : {}}
                transition={{ delay: 0.1 }}
-               className="text-4xl md:text-6xl font-serif font-bold text-white leading-tight"
+               className="text-3xl md:text-5xl font-serif font-bold text-white leading-tight"
              >
                Elite <span className="italic">Performers</span> Curated for You.
              </motion.h2>
@@ -83,7 +83,7 @@ export function FeaturedArtists() {
                initial={{ opacity: 0, y: 20 }}
                animate={isInView ? { opacity: 1, y: 0 } : {}}
                transition={{ delay: 0.2 }}
-               className="text-white/50 text-lg md:text-xl font-light"
+               className="text-white/40 text-base md:text-lg font-light leading-relaxed"
              >
                We only represent the top 1% of live performers, vetted for high-end events and exceptional talent.
              </motion.p>
@@ -138,31 +138,31 @@ export function FeaturedArtists() {
                        </div>
                     </div>
 
-                    <div className="absolute bottom-6 left-6 right-6">
-                       <span className="text-gold text-xs font-bold uppercase tracking-widest block mb-2">{artist.genre}</span>
-                       <h3 className="text-2xl font-serif font-bold text-white">{artist.name}</h3>
+                    <div className="absolute bottom-4 left-4 right-4">
+                       <span className="text-gold text-[10px] font-bold uppercase tracking-widest block mb-1">{artist.genre}</span>
+                       <h3 className="text-xl font-serif font-bold text-white leading-tight">{artist.name}</h3>
                     </div>
                  </div>
 
                  {/* Content Section */}
-                 <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
+                 <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
                        <div className="flex items-center space-x-1">
-                          <Star size={14} className="text-gold fill-gold" />
-                          <span className="text-white text-sm font-semibold">{artist.rating}</span>
+                          <Star size={12} className="text-gold fill-gold" />
+                          <span className="text-white text-xs font-semibold">{artist.rating}</span>
                        </div>
-                       <div className="text-white/40 text-xs font-medium uppercase tracking-tighter">
+                       <div className="text-white/30 text-[9px] font-bold uppercase tracking-tighter">
                           {artist.experience}
                        </div>
                     </div>
                     
-                    <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                    <div className="flex items-center justify-between border-t border-white/5 pt-3">
                        <div className="flex flex-col">
-                          <span className="text-white/30 text-[10px] uppercase font-bold tracking-widest uppercase">Pricing from</span>
-                          <span className="text-gold font-serif font-bold text-lg">{artist.price}</span>
+                          <span className="text-white/20 text-[8px] uppercase font-bold tracking-[.2em]">Pricing from</span>
+                          <span className="text-gold font-serif font-bold text-base">{artist.price}</span>
                        </div>
-                       <button className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center text-gold hover:bg-gold hover:text-charcoal transition-all">
-                          <ExternalLink size={16} />
+                       <button className="w-8 h-8 rounded-full border border-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-charcoal transition-all">
+                          <ExternalLink size={14} />
                        </button>
                     </div>
                  </CardContent>
@@ -176,25 +176,21 @@ export function FeaturedArtists() {
            initial={{ opacity: 0, y: 40 }}
            animate={isInView ? { opacity: 1, y: 0 } : {}}
            transition={{ delay: 0.8 }}
-           className="mt-24 p-12 rounded-[2rem] bg-gradient-to-br from-charcoal-light to-charcoal border border-gold/10 relative overflow-hidden group shadow-2xl"
+           className="mt-20 p-8 rounded-[2rem] bg-gradient-to-br from-charcoal-light to-charcoal border border-gold/10 relative overflow-hidden group shadow-2xl"
         >
            <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:opacity-40 transition-opacity" />
-           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                 <h3 className="text-3xl md:text-5xl font-serif font-bold text-white leading-tight">
+           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <div className="space-y-4">
+                 <h3 className="text-2xl md:text-4xl font-serif font-bold text-white leading-tight">
                     Experience the <span className="text-gold">Velqora</span> Standard.
                  </h3>
-                 <p className="text-white/60 leading-relaxed font-light">
+                 <p className="text-white/40 text-sm font-light leading-relaxed">
                     Every performance is meticulously curated. We handle the aesthetics, the quality, and the exclusivity, so you can focus on the experience.
                  </p>
-                 <div className="flex items-center space-x-6 text-gold/60 text-xs font-bold uppercase tracking-widest pt-4">
-                    <span className="flex items-center space-x-2"><Disc size={16} /> <span>Vinyl Grade Audio</span></span>
-                    <span className="flex items-center space-x-2"><Music size={16} /> <span>Custom Sets</span></span>
-                 </div>
               </div>
               <div className="flex justify-end">
-                 <Button className="h-16 px-12 text-lg bg-gold text-charcoal font-bold hover:scale-105 transition-transform">
-                    Inquire for your Private Event
+                 <Button className="h-14 px-10 text-base bg-gold text-charcoal font-bold hover:scale-105 transition-transform">
+                    Inquire for Private Event
                  </Button>
               </div>
            </div>

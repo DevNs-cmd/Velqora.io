@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Music, Star, Award, ShieldCheck, Mail, LogIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -15,6 +16,11 @@ function SignInForm() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
   const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    email: '',
+    name: '',
+    role: 'CLIENT' as 'CLIENT' | 'ARTIST' | 'ADMIN'
+  })
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.role) {
@@ -25,10 +31,16 @@ function SignInForm() {
     }
   }, [status, session, router])
 
-  const handleGoogleSignIn = async () => {
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formData.email) return
+
     setIsLoading(true)
     try {
-      await signIn('google', { callbackUrl })
+      await signIn('credentials', { 
+        ...formData,
+        callbackUrl 
+      })
     } catch (error) {
       console.error('Sign in error:', error)
       setIsLoading(false)
@@ -93,55 +105,89 @@ function SignInForm() {
          <motion.div 
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
-           className="w-full max-w-sm space-y-12"
+           className="w-full max-w-sm space-y-10"
          >
-            <div className="space-y-4 text-center lg:text-left">
-               <h2 className="text-3xl md:text-5xl font-serif font-bold text-white">Welcome Back.</h2>
-               <p className="text-white/40 font-light">Access your exclusive Velqora dashboard.</p>
+            <div className="space-y-6 text-center lg:text-left flex flex-col items-center lg:items-start">
+               <div className="w-24 h-24 relative mb-2 rounded-full border-2 border-gold/30 overflow-hidden bg-black shadow-2xl">
+                  <Image 
+                    src="/logo.jpg" 
+                    alt="Velqora Logo" 
+                    fill 
+                    className="object-contain p-4"
+                  />
+               </div>
+               <div className="space-y-2">
+                 <h2 className="text-3xl md:text-5xl font-serif font-bold text-white">Guest Access.</h2>
+                 <p className="text-white/40 font-light">Enter details to access the premium portal as any role.</p>
+               </div>
             </div>
 
             {/* MAIN AUTH */}
-            <div className="space-y-6">
+            <form onSubmit={handleSignIn} className="space-y-6">
+               <div className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-gold/60 ml-1">Email Address</label>
+                    <input 
+                      type="email" 
+                      placeholder="demo@velqora.com"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="w-full h-14 bg-white/5 border border-white/10 rounded-xl px-4 text-white focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-gold/60 ml-1">Full Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="John Doe"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      className="w-full h-14 bg-white/5 border border-white/10 rounded-xl px-4 text-white focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-gold/60 ml-1">Portal View</label>
+                    <div className="grid grid-cols-3 gap-2">
+                       {(['CLIENT', 'ARTIST', 'ADMIN'] as const).map((r) => (
+                         <button
+                           key={r}
+                           type="button"
+                           onClick={() => setFormData({...formData, role: r})}
+                           className={cn(
+                             "h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all border",
+                             formData.role === r 
+                               ? "bg-gold text-charcoal border-gold" 
+                               : "bg-white/5 text-white/40 border-white/10 hover:border-white/20"
+                           )}
+                         >
+                            {r}
+                         </button>
+                       ))}
+                    </div>
+                  </div>
+               </div>
+
                <Button
                  disabled={isLoading}
-                 onClick={handleGoogleSignIn}
+                 type="submit"
                  className="w-full h-16 bg-white hover:bg-white/90 text-charcoal font-bold text-lg rounded-xl flex items-center justify-center space-x-4 transition-all shadow-2xl relative overflow-hidden group"
                >
                  {isLoading ? (
-                   <span className="animate-pulse">Connecting...</span>
+                   <span className="animate-pulse tracking-widest uppercase text-sm">Authenticating Securely...</span>
                  ) : (
                    <>
-                     <Image 
-                       src="https://www.google.com/favicon.ico" 
-                       alt="Google" 
-                       width={20} 
-                       height={20} 
-                       className="group-hover:scale-110 transition-transform"
-                     />
-                     <span>Continue with Google</span>
+                     <LogIn size={20} className="group-hover:translate-x-1 transition-transform" />
+                     <span className="uppercase tracking-[.2em] text-sm">Enter Portal</span>
                    </>
                  )}
                </Button>
-               
-               <div className="flex items-center space-x-4 opacity-10 py-2">
-                  <div className="flex-1 h-px bg-white" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white">Velqora Secure</span>
-                  <div className="flex-1 h-px bg-white" />
-               </div>
+            </form>
 
-               <div className="grid grid-cols-1 gap-4">
-                  <Button
-                    variant="outline"
-                    className="h-16 border-gold/20 text-white/60 hover:text-white hover:border-gold/40 hover:bg-white/5 rounded-xl flex items-center justify-center space-x-3 transition-all"
-                  >
-                     <Mail size={18} className="text-gold" />
-                     <span>Concierge Access (Invite Only)</span>
-                  </Button>
-               </div>
-            </div>
-
-            <p className="text-[10px] text-center text-white/30 font-bold uppercase tracking-widest">
-               By continuing, you agree to our <Link href="/terms" className="text-gold hover:underline">Terms</Link> and <Link href="/privacy" className="text-gold hover:underline">Privacy Policy</Link>.
+            <p className="text-[10px] text-center text-white/30 font-bold uppercase tracking-widest leading-loose">
+               Secure testing environment. Data is persisted per email. <br/>
+               By entering, you agree to the <Link href="/terms" className="text-gold hover:underline">Terms of Service</Link>.
             </p>
          </motion.div>
       </div>
