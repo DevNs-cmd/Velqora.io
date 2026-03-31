@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function SignInPage() {
+function SignInForm() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -146,5 +146,17 @@ export default function SignInPage() {
          </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-charcoal flex items-center justify-center">
+        <div className="text-gold font-serif animate-pulse text-2xl tracking-[.4em]">VELQORA</div>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   )
 }
