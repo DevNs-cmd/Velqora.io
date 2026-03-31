@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
+import { Video } from '@/components/ui/Video'
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -71,9 +72,8 @@ export default function ClientDashboardPage() {
       {/* ── HERO BANNER ────────────────────────────────────── */}
       <motion.section {...fadeUp(0)} className="relative rounded-3xl overflow-hidden min-h-[280px] flex items-end">
         {/* video bg */}
-        <video
+        <Video
           src="/concert.mp4"
-          autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* overlays */}
@@ -203,9 +203,8 @@ export default function ClientDashboardPage() {
 
           {/* VIDEO SHOWCASE: Ballroom */}
           <motion.div {...fadeUp(0.35)} className="relative rounded-3xl overflow-hidden h-48 group cursor-pointer">
-            <video
+            <Video
               src="/ballroom.mp4"
-              autoPlay muted loop playsInline
               className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
@@ -255,9 +254,8 @@ export default function ClientDashboardPage() {
           <motion.div {...fadeUp(0.28)} className="rounded-2xl overflow-hidden group"
             style={{ border: '1px solid rgba(212,175,55,0.15)' }}>
             <div className="relative h-36 overflow-hidden">
-              <video
+              <Video
                 src="/concert.mp4"
-                autoPlay muted loop playsInline
                 className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-700"
                 style={{ filter: 'grayscale(30%)' }}
               />

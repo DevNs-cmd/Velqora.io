@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Video } from '@/components/ui/Video'
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -105,9 +106,8 @@ export default function AdminDashboardPage() {
 
       {/* ── HERO VIDEO BANNER ───────────────────────────────── */}
       <motion.div {...fadeUp(0.05)} className="relative rounded-3xl overflow-hidden h-44">
-        <video
+        <Video
           src="/ballroom.mp4"
-          autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'hue-rotate(270deg) saturate(0.5) brightness(0.6)' }}
         />
@@ -458,9 +458,8 @@ export default function AdminDashboardPage() {
 
             {/* Second video strip in artists tab */}
             <div className="relative rounded-2xl overflow-hidden h-36">
-              <video
+              <Video
                 src="/concert.mp4"
-                autoPlay muted loop playsInline
                 className="absolute inset-0 w-full h-full object-cover opacity-30"
                 style={{ filter: 'hue-rotate(30deg) saturate(0.7)' }}
               />

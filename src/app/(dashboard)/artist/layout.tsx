@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Video } from '@/components/ui/Video'
 
 const menuItems = [
   { name: 'Dashboard', href: '/artist', icon: LayoutDashboard, badge: null },
@@ -68,9 +69,8 @@ export default function ArtistLayout({ children }: { children: React.ReactNode }
       >
         {/* VIDEO STRIP — dj footage */}
         <div className="relative h-36 overflow-hidden flex-shrink-0">
-          <video
+          <Video
             src="/dj.mov"
-            autoPlay muted loop playsInline
             className="absolute inset-0 w-full h-full object-cover opacity-40"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080808]" />

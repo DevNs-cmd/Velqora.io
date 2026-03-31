@@ -23,6 +23,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Video } from '@/components/ui/Video'
 
 const menuItems = [
   { name: 'Dashboard', href: '/client', icon: LayoutDashboard, badge: null },
@@ -69,9 +70,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       >
         {/* VIDEO strip at sidebar top */}
         <div className="relative h-32 overflow-hidden flex-shrink-0">
-          <video
+          <Video
             src="/concert.mp4"
-            autoPlay muted loop playsInline
             className="absolute inset-0 w-full h-full object-cover opacity-30"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]" />

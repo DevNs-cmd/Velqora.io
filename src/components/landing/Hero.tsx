@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
+import { Video } from '@/components/ui/Video'
 
 const Brand3D = dynamic(() => import('@/components/ui/Brand3D'), { 
   ssr: false,
@@ -18,15 +19,14 @@ export function Hero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0 z-0 bg-[#020202]">
-        <video 
-          autoPlay 
-          loop 
-          muted 
+        <Video
+          src="/concert.mp4"
+          autoPlay
+          loop
+          muted
           playsInline
           className="w-full h-full object-cover scale-110"
-        >
-          <source src="/concert.mp4" type="video/mp4" />
-        </video>
+        />
         
         {/* iOS style deep cinematic overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/80" />
@@ -96,15 +96,14 @@ export function Hero() {
         >
            <div className="relative group h-full flex items-center justify-center">
               <div className="relative z-10 w-full aspect-[4/5] rounded-[5rem] overflow-hidden border border-white/10 shadow-[0_48px_80px_-24px_rgba(0,0,0,0.6)]">
-                 <video 
-                   autoPlay 
-                   loop 
-                   muted 
+                 <Video
+                   src="/ballroom.mp4"
+                   autoPlay
+                   loop
+                   muted
                    playsInline
                    className="w-full h-full object-cover saturate-[0.8] brightness-[0.8] group-hover:saturate-[1.1] group-hover:brightness-100 transition-all duration-1000 ease-in-out"
-                 >
-                   <source src="/ballroom.mp4" type="video/mp4" />
-                 </video>
+                 />
                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
                  
                  <div className="absolute bottom-12 left-12 right-12">

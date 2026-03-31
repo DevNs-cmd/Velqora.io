@@ -20,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
+import { Video } from '@/components/ui/Video'
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -70,9 +71,8 @@ export default function ArtistDashboardPage() {
 
       {/* ── HERO ────────────────────────────────────── */}
       <motion.section {...fadeUp(0)} className="relative rounded-3xl overflow-hidden min-h-[260px] flex items-end">
-        <video
+        <Video
           src="/dj.mov"
-          autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-black/30" />
@@ -197,9 +197,8 @@ export default function ArtistDashboardPage() {
 
           {/* VIDEO STRIP */}
           <motion.div {...fadeUp(0.35)} className="relative rounded-3xl overflow-hidden h-44 group cursor-pointer">
-            <video
+            <Video
               src="/concert.mp4"
-              autoPlay muted loop playsInline
               className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-75 transition-opacity duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/85 to-transparent" />

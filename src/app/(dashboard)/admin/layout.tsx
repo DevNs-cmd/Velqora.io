@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Video } from '@/components/ui/Video'
 
 const menuItems = [
   { name: 'System Analytics', href: '/admin', icon: BarChart3, badge: null, danger: false },
@@ -107,9 +108,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       >
         {/* VIDEO strip — with purple tint for admin identity */}
         <div className="relative h-36 overflow-hidden flex-shrink-0">
-          <video
+          <Video
             src="/ballroom.mp4"
-            autoPlay muted loop playsInline
             className="absolute inset-0 w-full h-full object-cover opacity-25"
             style={{ filter: 'hue-rotate(270deg) saturate(0.6)' }}
           />
