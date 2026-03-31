@@ -1,31 +1,40 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Music, 
-  Calendar, 
-  Star, 
-  ArrowRight, 
-  Sparkles, 
-  Clock, 
-  CheckCircle2, 
+import {
+  Music,
+  Calendar,
+  Star,
+  ArrowRight,
+  Sparkles,
+  CheckCircle2,
   AlertCircle,
-  Plus
+  Plus,
+  Play,
+  TrendingUp,
+  Clock,
+  ChevronRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, delay, ease: 'easeOut' as const },
+})
+
 export default function ClientDashboardPage() {
   const { data: session } = useSession()
+  const firstName = session?.user?.name?.split(' ')[0] ?? 'there'
 
   const stats = [
-    { label: 'Active Requests', value: '3', icon: Music, color: 'text-gold' },
-    { label: 'Upcoming Bookings', value: '1', icon: Calendar, color: 'text-white' },
-    { label: 'Total Spent', value: '$4.2k', icon: Star, color: 'text-gold-light' },
-    { label: 'Completed Events', value: '12', icon: CheckCircle2, color: 'text-gold' },
+    { label: 'Active Requests', value: '3', icon: Music, accent: '#D4AF37' },
+    { label: 'Upcoming Events', value: '1', icon: Calendar, accent: '#fff' },
+    { label: 'Total Spent', value: '$4.2k', icon: TrendingUp, accent: '#D4AF37' },
+    { label: 'Events Done', value: '12', icon: CheckCircle2, accent: '#4ade80' },
   ]
 
   const activeRequests = [
@@ -35,7 +44,8 @@ export default function ClientDashboardPage() {
       date: 'Aug 15, 2026',
       status: 'MATCHING',
       offers: 5,
-      budget: '$2,000 - $3,500'
+      budget: '$2,000 – $3,500',
+      type: 'Jazz / Orchestral',
     },
     {
       id: 'REQ-02',
@@ -43,156 +53,245 @@ export default function ClientDashboardPage() {
       date: 'Sept 02, 2026',
       status: 'OFFER_ACCEPTED',
       offers: 2,
-      budget: '$1,200 - $1,800'
-    }
+      budget: '$1,200 – $1,800',
+      type: 'Acoustic / Pop',
+    },
+  ]
+
+  const timeline = [
+    { label: 'Request submitted', time: '2h ago', done: true },
+    { label: 'AI matching in progress', time: '1h ago', done: true },
+    { label: 'Offers received (5)', time: '45m ago', done: true },
+    { label: 'Awaiting your review', time: 'Now', done: false },
   ]
 
   return (
-    <div className="space-y-12">
-       {/* DASHBOARD HERO */}
-       <section className="relative p-12 rounded-[2.5rem] bg-gradient-to-br from-charcoal-light to-charcoal border border-gold/10 overflow-hidden group">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-gold/5 blur-[100px] pointer-events-none group-hover:opacity-40 transition-opacity" />
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-             <div className="space-y-6">
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center space-x-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full w-fit"
-                >
-                   <Sparkles size={14} className="text-gold" />
-                   <span className="text-[10px] font-bold uppercase tracking-widest text-gold-light">Member Tier: Platinum</span>
-                </motion.div>
-                <div className="space-y-2">
-                   <h1 className="text-4xl md:text-6xl font-serif font-bold text-white">Bonjour, <span className="text-gold italic">{session?.user?.name?.split(' ')[0]}</span>.</h1>
-                   <p className="text-white/40 text-lg font-light">Your next performance experience is just a few steps away.</p>
-                </div>
-                <div className="flex items-center space-x-4 pt-4">
-                   <Link href="/client/requests/new">
-                      <Button className="h-14 px-8 bg-gold text-charcoal font-bold group shadow-2xl">
-                         <Plus className="mr-2 h-5 w-5" />
-                         Create New Request
-                      </Button>
-                   </Link>
-                </div>
-             </div>
-             
-             {/* QUICK STATS IN HERO */}
-             <div className="grid grid-cols-2 gap-6">
-                {stats.map((stat, idx) => (
-                   <motion.div
-                     key={stat.label}
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ delay: idx * 0.1 }}
-                     className="p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/20 transition-all group/stat"
-                   >
-                      <stat.icon className={`${stat.color} mb-4 group-hover/stat:scale-110 transition-transform`} size={24} />
-                      <div className="text-2xl font-serif font-bold text-white">{stat.value}</div>
-                      <div className="text-[10px] font-bold uppercase tracking-widest text-white/30">{stat.label}</div>
-                   </motion.div>
-                ))}
-             </div>
-          </div>
-       </section>
+    <div className="space-y-10">
 
-       {/* ACTIVE REQUESTS & OFFERS */}
-       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-          {/* Main Feed */}
-          <div className="lg:col-span-3 space-y-8">
-             <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-serif font-bold text-white">Active Requests</h3>
-                <Link href="/client/requests" className="text-gold text-xs font-bold uppercase tracking-widest flex items-center hover:underline group">
-                   See all <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
-             </div>
-             
-             <div className="grid grid-cols-1 gap-6">
-                {activeRequests.length > 0 ? (
-                   activeRequests.map((req) => (
-                      <Card key={req.id} className="bg-charcoal border-white/5 hover:border-gold/20 transition-all overflow-hidden group">
-                         <CardContent className="p-8">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                               <div className="space-y-4">
-                                  <div className="flex items-center space-x-3">
-                                     <div className="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center text-gold border border-gold/20 group-hover:bg-gold/20 transition-all"><Music size={20} /></div>
-                                     <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-tighter text-white/40 mb-1">{req.id}</div>
-                                        <h4 className="text-xl font-bold text-white">{req.title}</h4>
-                                     </div>
-                                  </div>
-                                  <div className="flex flex-wrap gap-6 text-xs text-white/40 font-bold uppercase tracking-widest">
-                                     <div className="flex items-center space-x-2"><Calendar size={14} className="text-gold" /> <span>{req.date}</span></div>
-                                     <div className="flex items-center space-x-2"><Star size={14} className="text-gold" /> <span>{req.budget}</span></div>
-                                  </div>
-                               </div>
+      {/* ── HERO BANNER ────────────────────────────────────── */}
+      <motion.section {...fadeUp(0)} className="relative rounded-3xl overflow-hidden min-h-[280px] flex items-end">
+        {/* video bg */}
+        <video
+          src="/concert.mp4"
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-                               <div className="flex items-center space-x-6">
-                                  <div className="text-right flex flex-col items-end">
-                                     <div className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full mb-2 ${
-                                       req.status === 'MATCHING' ? 'bg-blue-400/10 text-blue-400 border border-blue-400/20' : 'bg-gold/10 text-gold border border-gold/20'
-                                     }`}>
-                                        {req.status.replace('_', ' ')}
-                                     </div>
-                                     <div className="text-sm font-semibold text-white/50">{req.offers} Offers Received</div>
-                                  </div>
-                                  <Link href={`/client/requests/${req.id}`}>
-                                     <Button variant="outline" className="border-gold/20 text-gold hover:bg-gold/10 focus:ring-0">Manage</Button>
-                                  </Link>
-                               </div>
-                            </div>
-                         </CardContent>
-                      </Card>
-                   ))
-                ) : (
-                   <div className="p-20 text-center space-y-6 bg-white/5 rounded-[2rem] border border-dashed border-white/10">
-                      <div className="w-16 h-16 rounded-full bg-gold/5 flex items-center justify-center text-gold mx-auto"><Music size={32} /></div>
-                      <div className="space-y-2">
-                         <h4 className="text-xl font-bold text-white">No active requests</h4>
-                         <p className="text-white/30 font-light">Create a request to start matching with world-class performers.</p>
-                      </div>
-                      <Link href="/client/requests/new">
-                        <Button className="bg-gold text-charcoal font-bold">New Request</Button>
-                      </Link>
-                   </div>
-                )}
-             </div>
+        {/* gold corner accent */}
+        <div className="absolute top-6 right-6 w-32 h-32 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.25) 0%, transparent 70%)' }} />
+
+        <div className="relative z-10 p-8 md:p-12 w-full flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="space-y-4 max-w-lg">
+            {/* Badge */}
+            <div className="flex items-center gap-2 w-fit px-3 py-1.5 rounded-full"
+              style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <Sparkles size={12} className="text-[#D4AF37]" />
+              <span className="text-[10px] font-bold tracking-[.3em] text-[#D4AF37] uppercase">Platinum Concierge</span>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl font-serif font-bold text-white leading-tight">
+              Bonjour,{' '}
+              <span className="italic" style={{ color: '#D4AF37' }}>{firstName}</span>
+            </h1>
+            <p className="text-white/50 text-base font-light leading-relaxed">
+              Your next cinematic experience is just a request away. Curated performers, unmatched luxury.
+            </p>
+
+            <Link href="/client/requests/new">
+              <Button className="mt-2 h-12 px-8 font-bold text-sm tracking-widest uppercase"
+                style={{ background: 'linear-gradient(135deg,#D4AF37,#b8960c)', color: '#0a0a0a' }}>
+                <Plus size={16} className="mr-2" />
+                Create Request
+              </Button>
+            </Link>
           </div>
 
-          {/* Right Sidebar: Recommended or Tips */}
-          <div className="lg:col-span-2 space-y-8">
-             <h3 className="text-2xl font-serif font-bold text-white">Exclusive Spotlight</h3>
-             <Card className="bg-charcoal border-gold/10 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-2 h-full bg-gold/30 group-hover:bg-gold transition-colors" />
-                <div className="p-8 space-y-6">
-                   <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold"><Sparkles size={16} /></div>
-                      <span className="text-xs font-bold uppercase tracking-[.3em] text-white">Chef's Choice: Artists</span>
-                   </div>
-                   <div className="space-y-4">
-                      <div className="relative aspect-video rounded-2xl overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
-                         <img src="https://images.unsplash.com/photo-1501612722273-730109fa610e?auto=format&fit=crop&q=80" alt="Concert" className="object-cover w-full h-full" />
-                      </div>
-                      <div className="space-y-2 text-center text-white/50 text-sm font-light leading-relaxed">
-                         "The Velvet Symphony" just joined Velqora. An 8-piece orchestral funk fusion band currently accepting bookings for Autumn 2026.
-                      </div>
-                   </div>
-                   <Button variant="ghost" className="w-full text-gold hover:bg-gold/5 border border-gold/10 font-bold uppercase tracking-widest text-xs h-12">
-                      Request Pre-Approval
-                   </Button>
-                </div>
-             </Card>
-             
-             <Card className="bg-charcoal border-white/5 p-8">
-                <div className="flex items-center space-x-4 mb-6">
-                   <AlertCircle size={20} className="text-gold" />
-                   <h4 className="text-lg font-bold text-white">Concierge Tip</h4>
-                </div>
-                <p className="text-sm font-light text-white/40 leading-relaxed italic">
-                   "To get better matches, provide high-quality venue photos in your event request. Top-tier artists prioritize events that showcase their performance in an elite environment."
-                </p>
-             </Card>
+          {/* MINI STATS GRID */}
+          <div className="grid grid-cols-2 gap-3 flex-shrink-0">
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                {...fadeUp(0.1 + i * 0.08)}
+                className="p-4 rounded-2xl flex flex-col gap-2 min-w-[110px]"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(12px)',
+                }}
+              >
+                <s.icon size={18} style={{ color: s.accent }} />
+                <div className="text-2xl font-bold text-white font-serif">{s.value}</div>
+                <div className="text-[9px] font-bold uppercase tracking-[.15em] text-white/30">{s.label}</div>
+              </motion.div>
+            ))}
           </div>
-       </div>
+        </div>
+      </motion.section>
+
+      {/* ── MAIN GRID ──────────────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+        {/* LEFT: Requests */}
+        <div className="lg:col-span-3 space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-serif font-bold text-white">Active Requests</h2>
+            <Link href="/client/requests"
+              className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#D4AF37] hover:text-[#D4AF37]/70 transition-colors group">
+              View all <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          <div className="space-y-4">
+            {activeRequests.map((req, i) => (
+              <motion.div
+                key={req.id}
+                {...fadeUp(0.15 + i * 0.1)}
+                className="relative rounded-2xl overflow-hidden group cursor-pointer"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+              >
+                {/* hover gold border glow */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                  style={{ boxShadow: 'inset 0 0 0 1px rgba(212,175,55,0.3)' }} />
+
+                {/* status strip */}
+                <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl ${req.status === 'MATCHING' ? 'bg-blue-400' : 'bg-[#D4AF37]'}`} />
+
+                <div className="p-6 pl-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                        style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                        <Music size={16} className="text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <div className="text-[9px] font-bold uppercase tracking-widest text-white/25">{req.id} · {req.type}</div>
+                        <h3 className="text-base font-bold text-white">{req.title}</h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-4 text-[10px] font-bold uppercase tracking-wider text-white/35 pl-12">
+                      <span className="flex items-center gap-1.5"><Calendar size={11} className="text-[#D4AF37]" />{req.date}</span>
+                      <span className="flex items-center gap-1.5"><Star size={11} className="text-[#D4AF37]" />{req.budget}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 sm:flex-shrink-0">
+                    <div className="text-right">
+                      <div className={`text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border mb-1 ${
+                        req.status === 'MATCHING'
+                          ? 'bg-blue-400/10 text-blue-400 border-blue-400/25'
+                          : 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/25'
+                      }`}>
+                        {req.status.replace('_', ' ')}
+                      </div>
+                      <div className="text-[10px] text-white/30 font-bold">{req.offers} offers</div>
+                    </div>
+                    <Link href={`/client/requests/${req.id}`}>
+                      <button className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110"
+                        style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)', color: '#D4AF37' }}>
+                        <ChevronRight size={16} />
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* VIDEO SHOWCASE: Ballroom */}
+          <motion.div {...fadeUp(0.35)} className="relative rounded-3xl overflow-hidden h-48 group cursor-pointer">
+            <video
+              src="/ballroom.mp4"
+              autoPlay muted loop playsInline
+              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
+            <div className="absolute inset-0 flex items-center px-8 gap-6">
+              <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+                style={{ background: 'rgba(212,175,55,0.2)', border: '2px solid rgba(212,175,55,0.5)' }}>
+                <Play size={20} className="text-[#D4AF37] ml-1" />
+              </div>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF37]/70 mb-1">Exclusive Preview</div>
+                <div className="text-lg font-serif font-bold text-white">Grand Ballroom Experience</div>
+                <div className="text-xs text-white/40 mt-0.5">See what elite events look like</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* RIGHT: Sidebar panels */}
+        <div className="lg:col-span-2 space-y-6">
+
+          {/* Event Timeline */}
+          <motion.div {...fadeUp(0.2)} className="rounded-2xl p-6 space-y-5"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <h3 className="text-base font-serif font-bold text-white flex items-center gap-2">
+              <Clock size={16} className="text-[#D4AF37]" />
+              Request Timeline
+            </h3>
+            <div className="space-y-4">
+              {timeline.map((step, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${step.done ? 'border-[#D4AF37] bg-[#D4AF37]/20' : 'border-white/20 bg-transparent'}`}>
+                    {step.done && <CheckCircle2 size={10} className="text-[#D4AF37]" />}
+                  </div>
+                  <div className="flex-1">
+                    <div className={`text-sm font-medium ${step.done ? 'text-white' : 'text-white/40'}`}>{step.label}</div>
+                    <div className="text-[10px] text-white/25 font-bold uppercase tracking-widest">{step.time}</div>
+                  </div>
+                  {!step.done && (
+                    <div className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse flex-shrink-0 mt-2" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Artist Spotlight */}
+          <motion.div {...fadeUp(0.28)} className="rounded-2xl overflow-hidden group"
+            style={{ border: '1px solid rgba(212,175,55,0.15)' }}>
+            <div className="relative h-36 overflow-hidden">
+              <video
+                src="/concert.mp4"
+                autoPlay muted loop playsInline
+                className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-700"
+                style={{ filter: 'grayscale(30%)' }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-black/20" />
+              <div className="absolute bottom-4 left-4">
+                <div className="text-[9px] font-bold tracking-widest text-[#D4AF37] uppercase mb-1">Chef's Choice</div>
+                <div className="text-base font-serif font-bold text-white">The Velvet Symphony</div>
+              </div>
+            </div>
+            <div className="p-5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <p className="text-xs text-white/40 leading-relaxed mb-4">
+                An 8-piece orchestral funk fusion band. Currently accepting Autumn 2026 bookings. Highly rated by 48 Velqora clients.
+              </p>
+              <Button variant="ghost"
+                className="w-full h-10 text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest hover:bg-[#D4AF37]/5"
+                style={{ border: '1px solid rgba(212,175,55,0.2)' }}>
+                Request Pre-Approval
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Concierge Tip */}
+          <motion.div {...fadeUp(0.35)} className="rounded-2xl p-5"
+            style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <AlertCircle size={16} className="text-[#D4AF37]" />
+              <span className="text-xs font-bold text-white uppercase tracking-widest">Concierge Tip</span>
+            </div>
+            <p className="text-xs font-light text-white/35 leading-relaxed italic">
+              "Provide high-quality venue photos in your request. Top-tier artists prioritize events that showcase an elite environment."
+            </p>
+          </motion.div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏆 Velqora: Premium Luxury Talent Marketplace
 
-## Getting Started
+![Velqora Banner](public/logo.jpg)
 
-First, run the development server:
+**Velqora** is an ultra-premium, boutique marketplace designed to connect elite musical talent with the world's most exclusive events. Built with a cinematic, high-fashion aesthetic, the platform bridges the gap between high-demand performers and luxury event planners through a secure, curated digital ecosystem.
 
+---
+
+## ✨ Features & Architecture
+
+### 🛡️ Resilient Authentication (Demo Ready)
+The platform features a custom **NextAuth** implementation that is specifically hardened for both production and rapid demonstration:
+- **Resilient Fallback**: Automatically detects if the local PostgreSQL database is unreachable and triggers a **Mock Auth Mode**. This ensures the platform "just works" for testers without any setup.
+- **Role-Based Access Control (RBAC)**: Distinct, secure dashboard environments for **CLIENTS**, **ARTISTS**, and **ADMINS**.
+- **Instant Role-Switching**: Testers can switch between all three platform views using a simple role selector on the [Sign-In Page](https://velqoraio.vercel.app/auth/signin).
+
+### 🎨 Boutique Luxury UI/UX
+- **Cinematic Experience**: Immersive hero section featuring full-screen HD video backgrounds with ambient lighting systems.
+- **Glassmorphic Components**: High-fidelity UI using Gaussian blur, translucent layers, and gold border accents for a "prestige" feel.
+- **Circular Brand Identity**: Unified brand framing using circular high-gloss containers for logos and performance previews.
+- **Mobile First & Responsive**: Every component—from the artist cards to the analytical dashboards—is optimized for premium mobile experiences.
+
+### 📊 Performance Dashboards
+- **Client Control Center**: Streamlined event request creation, offer management, and concierge-level booking flows.
+- **Artist Studio**: Portfolios management, gig discovery, and revenue analytics for elite performers.
+- **System Intelligence (Admin)**: Holistic platform oversight including revenue velocity charts and artist verification queues.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 14+ (App Router) |
+| **Styling** | Tailwind CSS (Custom Theme) |
+| **Animations** | Framer Motion (Optimized) |
+| **Auth** | NextAuth.js (JWT Strategy) |
+| **Database** | PostgreSQL (Supabase / Local) |
+| **ORM** | Prisma |
+| **Icons** | Lucide React |
+| **Components** | Radix UI / Shadcn UI |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/DevNs-cmd/Velqora.io.git
+cd Velqora
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Database Sync (Optional)
+This project is demo-ready and will work even if your database is offline. To sync a real PostgreSQL database:
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to experience the cinematic landing page.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📦 Deployment
 
-To learn more about Next.js, take a look at the following resources:
+This project is optimized for deployment on **Vercel** with zero-configuration required. All TypeScript type conflicts and static bails have been pre-resolved for production stability.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💎 The Velqora Standard
+*Curating extraordinary moments for the world's most exclusive events.* 
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© 2026 Velqora Private. All Rights Reserved.
