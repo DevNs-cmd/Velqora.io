@@ -49,6 +49,5 @@ export const config = {
     '/admin/:path*',
     '/artist/:path*',
     '/client/:path*',
-    '/auth/:path*',
   ],
 }

@@ -17,11 +17,11 @@ function SignInForm() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (status === 'authenticated') {
-      const role = session?.user?.role
+    if (status === 'authenticated' && session?.user?.role) {
+      const role = session.user.role
       if (role === 'ADMIN') router.push('/admin')
       else if (role === 'ARTIST') router.push('/artist')
-      else router.push('/client')
+      else if (role === 'CLIENT') router.push('/client')
     }
   }, [status, session, router])
 
